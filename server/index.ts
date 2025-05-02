@@ -1,0 +1,129 @@
+/**
+ * Event Avengers Discord Bot
+ * 
+ * A Discord bot with points system featuring admin commands, 
+ * persistent storage, and visually engaging themed leaderboard
+ */
+
+import express from "express";
+import { createServer } from "http";
+import discordBot from "./discord-bot";
+import { log } from "./vite";
+import fetch from "node-fetch";
+import { fork, ChildProcess } from "child_process";
+import path from "path";
+
+// Simple console banner
+console.log(`
+╔═════════════════════════════════════════════════╗
+║                                                 ║
+║              EVENT AVENGERS BOT                 ║
+║                                                 ║
+║  Admin Commands:                                ║
+║    !givepoints @user <amount>                   ║
+║    !removepoints @user <amount>                 ║
+║    !msg <message>                               ║
+║    !countdown <name> <date-time>                ║
+║    !giveaway create/end/cancel/list             ║
+║                                                 ║
+║  User Commands:                                 ║
+║    !leaderboard / !lb                           ║
+║    !points / !mypoints                          ║
+║    !rank / !rank @user                          ║
+║    !shop                                        ║
+║    !earnpoints                                  ║
+║    !help                                        ║
+║                                                 ║
+║  Moderation Commands (!modhelp):                ║
+║    !mute/!unmute - User voice/chat permissions  ║
+║    !timeout/!ban/!kick - User management        ║
+║    !lock/!unlock - Control channel access       ║
+║    !purge - Delete multiple messages            ║
+║                                                 ║
+║  Interactive Features:                          ║
+║    !bet @user <amount>                          ║
+║      - Buttons for accept/decline and heads/tails║
+║    !giveaway                                    ║
+║      - Button-based entry system                ║
+║                                                 ║
+╚═════════════════════════════════════════════════╝
+`);
+
+// Initialize and start both Discord bot and HTTP server
+(async () => {
+  try {
+    // Start the Discord bot
+    await discordBot.login();
+    
+    // Create Express app and HTTP server
+    const app = express();
+    const httpServer = createServer(app);
+    
+    // Register routes
+    const { registerRoutes } = await import("./routes");
+    await registerRoutes(app);
+    
+    // Start listening on port 5000
+    const PORT = process.env.PORT || 5000;
+    httpServer.listen(PORT, "0.0.0.0", () => {
+      log(`Web server running on port ${PORT}`);
+      
+      // Set up enhanced keep-alive system
+      log("Setting up enhanced keep-alive system");
+      
+      // Start the keep-alive worker process
+      startKeepAliveWorker();
+    });
+  } catch (error) {
+    console.error("Failed to start:", error);
+  }
+})();
+
+// Periodic self-ping to keep the application alive
+function startKeepAliveWorker() {
+  // Self-ping at intervals
+  const selfPingInterval = 120000; // 2 minutes
+  
+  setInterval(async () => {
+    try {
+      // Ping ourselves first
+      const response = await fetch(`http://localhost:${process.env.PORT || 5000}/status`);
+      if (response.ok) {
+        const now = new Date().toLocaleTimeString();
+        log(`Self-ping successful at ${now}`);
+      } else {
+        console.error(`Self-ping failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Self-ping error:", error);
+    }
+  }, selfPingInterval);
+  
+  // Commented out the keep-alive worker for now since it's causing issues
+  // We'll rely on the self-ping mechanism which is sufficient
+  console.log("Using self-ping mechanism for keep-alive instead of worker process");
+  
+  /*
+  // Keep-alive worker code - disabled due to path resolution issues
+  try {
+    const workerPath = "./server/keep-alive.ts"; 
+    const worker = fork(workerPath, [], { 
+      detached: true, 
+      stdio: 'inherit'
+    });
+    
+    worker.on('error', (err) => {
+      console.error('Keep-alive worker error:', err);
+    });
+    
+    // Ensure worker is properly disconnected on exit
+    process.on('exit', () => {
+      if (worker && !worker.killed) {
+        worker.kill();
+      }
+    });
+  } catch (error) {
+    console.error("Failed to start keep-alive worker:", error);
+  }
+  */
+}

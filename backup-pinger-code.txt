@@ -1,0 +1,45 @@
+// Copy this code into a new Repl (Node.js)
+const fetch = require('node-fetch');
+const http = require('http');
+
+// Replace with your repl's username and project name
+const REPL_USERNAME = 'your-username';
+const REPL_NAME = 'your-repl-name';
+
+// Function to ping your bot
+async function pingBot() {
+  try {
+    // This format works with temporary Replit URLs
+    const url = `https://${REPL_NAME}.${REPL_USERNAME}.repl.co/ping`;
+    console.log(`Pinging ${url}...`);
+    
+    const response = await fetch(url);
+    const text = await response.text();
+    
+    console.log(`[${new Date().toLocaleTimeString()}] Ping status: ${response.status}, Response: ${text}`);
+  } catch (error) {
+    console.error(`[${new Date().toLocaleTimeString()}] Ping failed:`, error.message);
+  }
+}
+
+// Create a simple server to keep this pinger repl alive
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Pinger service is running');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Pinger server running on port ${PORT}`);
+  
+  // Start pinging immediately
+  pingBot();
+  
+  // Then ping every 5 minutes (300000 ms)
+  setInterval(pingBot, 5 * 60 * 1000);
+});
+
+// Keep the process alive
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+});

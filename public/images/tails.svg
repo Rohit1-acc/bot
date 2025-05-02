@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coin circle with silver gradient -->
+  <circle cx="100" cy="100" r="90" fill="url(#silverGradient)" stroke="#707070" stroke-width="4"/>
+  
+  <!-- Define silver gradient -->
+  <defs>
+    <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#C0C0C0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A0A0A0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Tails text -->
+  <text x="100" y="110" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#505050">TAILS</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="100" cy="60" r="20" fill="none" stroke="#505050" stroke-width="2" />
+  <circle cx="100" cy="140" r="20" fill="none" stroke="#505050" stroke-width="2" />
+  
+  <!-- Tail symbol -->
+  <path d="M90,60 C70,70 60,80 65,120 C85,100 95,90 90,60 Z" fill="#505050" />
+</svg>

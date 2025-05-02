@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coin circle with gold gradient -->
+  <circle cx="100" cy="100" r="90" fill="url(#goldGradient)" stroke="#8B7500" stroke-width="4"/>
+  
+  <!-- Define gold gradient -->
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFC125;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Heads text -->
+  <text x="100" y="110" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#8B4513">HEADS</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="100" cy="60" r="20" fill="none" stroke="#8B4513" stroke-width="2" />
+  <circle cx="100" cy="140" r="20" fill="none" stroke="#8B4513" stroke-width="2" />
+  
+  <!-- Crown symbol for heads -->
+  <path d="M80,70 L90,50 L100,70 L110,50 L120,70 L110,80 L90,80 Z" fill="#8B4513" />
+</svg>
